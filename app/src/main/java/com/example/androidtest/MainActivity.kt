@@ -20,54 +20,142 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.androidtest.ui.theme.AndroidTestTheme
 import androidx.compose.foundation.lazy.items
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.Button
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.sp
+import androidx.navigation.NavType
+import androidx.navigation.navArgument
+
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            ContactList()
+           Navigation()
         }
     }
 }
 
 @Composable
-fun ContactList() {
+fun Navigation() {
+    val navController = rememberNavController()
+    NavHost(navController = navController, startDestination = "contact_list") {
+        composable("contact_list") { ContactList(navController) }
+        composable("details_screen/{name}/{adress}",
+            arguments = listOf(
+                navArgument("name") { type= NavType.StringType },
+                navArgument("adress") { type= NavType.StringType }
+            )) { backStackEntry->
+            val name= backStackEntry.arguments?.getString("name")?:""
+            val adress= backStackEntry.arguments?.getString("adress")?:""
+            DetailsScreen(name,adress,navController)
+        }
+    }
+}
+
+
+@Composable
+fun ContactList(navController: NavHostController) {
     var listContact=listOf<Contact>()
     listContact=getContactList()
-    LazyColumn {
-        items(listContact){contact->
-            Cellules(contact)
+    Column {
+        Text(
+            text="Liste de Contacts",
+            modifier = Modifier.fillMaxWidth(),
+            fontSize = 28.sp,
+            fontWeight = FontWeight.Bold,
+            textAlign = TextAlign.Center)
+        Spacer(Modifier.height(30.dp))
+        LazyColumn {
+            items(listContact){contact->
+                Cellules(contact = contact,onClick={
+                    val Name=java.net.URLEncoder.encode(contact.nom,"UTF-8").replace("+", "%20")
+                    val Address=java.net.URLEncoder.encode(contact.adress,"UTF-8").replace("+", "%20")
+                    navController.navigate("details_screen/$Name/$Address")})
+            }
         }
     }
 }
 
 
 @Composable
-fun Cellules(contact: Contact) {
+fun Cellules(contact: Contact,onClick: () -> Unit) {
     Row(modifier = Modifier
         .fillMaxWidth()
-        .padding(8.dp)){
+        .padding(8.dp)
+        .clickable { onClick() }){
         AsyncImage(
-            model="https://avatar.iran.liara.run/public/${(1..100).random()}",
+            model="https://avatars.githubusercontent.com/u/583231?v=4",
             contentDescription = "Avatar",
-            modifier = Modifier.width(64.dp).height(64.dp)
+            modifier = Modifier
+                .size(64.dp)
+                .clip(CircleShape)
         )
         Spacer(Modifier.width(20.dp))
         Column {
-            Text(text=contact.nom)
+            Text(text=contact.nom,
+                fontWeight = FontWeight.Bold)
             Spacer(Modifier.height(4.dp))
-            Text(text=contact.adress)
+            Text(text=contact.adress,
+                modifier = Modifier.alpha(0.5f))
         }
     }
 }
 
 
-@Preview(showBackground = true)
+@Composable
+fun DetailsScreen(name:String,address: String,navController: NavHostController) {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(32.dp)
+    ) {
+        Button(onClick = {navController.popBackStack()}) {
+            Text("Back")
+        }
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier.align(Alignment.Center)
+        ) {
+            AsyncImage(
+                model = "https://avatars.githubusercontent.com/u/583231?v=4",
+                contentDescription = "Avatar",
+                modifier = Modifier
+                    .size(200.dp)
+                    .clip(CircleShape)
+            )
+            Spacer(Modifier.height(20.dp))
+            Text(
+                text=name,
+                fontSize = 20.sp)
+            Spacer(Modifier.height(5.dp))
+            Text(text=address,
+                fontSize = 20.sp)
+        }
+    }
+}
+
+
+
+@Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun GreetingPreview() {
     AndroidTestTheme {
-        ContactList()
     }
 }
 

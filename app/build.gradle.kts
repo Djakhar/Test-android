@@ -52,6 +52,7 @@ android {
 
 dependencies {
 
+    implementation(libs.navigation.compose)
     implementation("io.coil-kt:coil-compose:2.5.0")
     implementation(libs.core.ktx)
     implementation(libs.lifecycle.runtime.ktx)
