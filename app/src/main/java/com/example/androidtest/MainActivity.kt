@@ -27,15 +27,13 @@ fun Navigation() {
             ContactListScreen(navController)
         }
         composable(
-            route = "details_screen/{name}/{adress}",
+            route = "details_screen/{id}",
             arguments = listOf(
-                navArgument("name") { type = NavType.StringType },
-                navArgument("adress") { type = NavType.StringType }
+                navArgument("id") { type = NavType.IntType }
             )
         ) { backStackEntry ->
-            val name = backStackEntry.arguments?.getString("name") ?: ""
-            val adress = backStackEntry.arguments?.getString("adress") ?: ""
-            DetailsScreen(name, adress, navController)
+            val id = backStackEntry.arguments?.getInt("id") ?: 0
+            DetailsScreen(id, navController)
         }
     }
 }

@@ -1,5 +1,6 @@
 package com.example.androidtest.data
 
+import com.example.androidtest.model.ApiContact
 import com.example.androidtest.model.Contact
 import com.example.androidtest.network.RetrofitInstance
 import kotlinx.coroutines.Dispatchers
@@ -11,6 +12,7 @@ class ContactRepository {
             val apiContacts = RetrofitInstance.api.getContacts()
             val mapped = apiContacts.map {
                 Contact(
+                    id = it.id,
                     nom = it.name,
                     adress = "${it.address.street}, ${it.address.city}"
                 )
@@ -19,5 +21,8 @@ class ContactRepository {
         } catch (e: Exception) {
             emptyList()
         }
+    }
+    suspend fun getContactById(id:Int): ApiContact{
+        return RetrofitInstance.api.getContactById(id)
     }
 }

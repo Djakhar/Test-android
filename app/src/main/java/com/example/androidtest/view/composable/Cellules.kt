@@ -22,7 +22,7 @@ fun Cellules(contact: Contact, onClick: () -> Unit) {
             .clickable { onClick() }
     ) {
         AsyncImage(
-            model = "https://avatars.githubusercontent.com/u/583231?v=4",
+            model = "https://robohash.org/${contact.id}?set=set2",
             contentDescription = "Avatar",
             modifier = Modifier
                 .size(64.dp)

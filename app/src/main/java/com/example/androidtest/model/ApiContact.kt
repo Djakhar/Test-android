@@ -3,6 +3,7 @@ package com.example.androidtest.model
 data class ApiContact(
     val id:Int,
     val name: String,
+    val email: String,
     val address:Address
 )
 

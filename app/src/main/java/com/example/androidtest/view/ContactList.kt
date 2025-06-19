@@ -33,9 +33,7 @@ fun ContactListScreen(navController: NavHostController, viewModel: ContactViewMo
         LazyColumn {
             items(contacts) { contact ->
                 Cellules(contact) {
-                    val name = URLEncoder.encode(contact.nom, "UTF-8").replace("+", "%20")
-                    val address = URLEncoder.encode(contact.adress, "UTF-8").replace("+", "%20")
-                    navController.navigate("details_screen/$name/$address")
+                    navController.navigate("details_screen/${contact.id}")
                 }
             }
         }
