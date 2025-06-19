@@ -21,7 +21,12 @@ class ContactViewModel : ViewModel() {
 
     private fun loadContacts() {
         viewModelScope.launch {
-            _contacts.value = repository.getContactList()
+            try{
+                val list=repository.getContactList()
+                _contacts.value=list
+            }catch (e: Exception){
+                _contacts.value=emptyList()
+            }
         }
     }
 }

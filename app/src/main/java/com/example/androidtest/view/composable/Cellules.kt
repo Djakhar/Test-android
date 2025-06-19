@@ -1,4 +1,4 @@
-package com.example.androidtest.view.Composable
+package com.example.androidtest.view.composable
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*

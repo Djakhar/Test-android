@@ -13,7 +13,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
-import com.example.androidtest.view.Composable.Cellules
+import com.example.androidtest.view.composable.Cellules
 import com.example.androidtest.viewmodel.ContactViewModel
 import java.net.URLEncoder
 
