@@ -20,7 +20,6 @@ import com.example.androidtest.view.utilitaire.isTablet
 import com.example.androidtest.viewmodel.ContactViewModel
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.foundation.background
-import androidx.compose.ui.graphics.Color
 
 
 

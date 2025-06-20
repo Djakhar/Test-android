@@ -12,7 +12,7 @@ class ContactViewModelFactory(private val repository: ContactRepository) : ViewM
             @Suppress("UNCHECKED_CAST")
             return ContactViewModel(repository) as T
         }
-        throw IllegalArgumentException("Unknown ViewModel class")
+        throw IllegalArgumentException("ViewModel inconnu")
     }
 }
 

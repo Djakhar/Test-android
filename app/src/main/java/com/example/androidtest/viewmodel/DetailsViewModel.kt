@@ -17,7 +17,7 @@ class DetailsViewModel(private val repository: ContactRepository) : ViewModel() 
         viewModelScope.launch {
             try {
                 _contact.value = repository.getContactById(id)
-            } catch (e: Exception) {
+            } catch (_: Exception) {
                 _contact.value = null
             }
         }

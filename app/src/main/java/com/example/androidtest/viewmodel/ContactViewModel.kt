@@ -22,7 +22,7 @@ class ContactViewModel(private val repository: ContactRepository) : ViewModel() 
             try {
                 val list = repository.getContactList()
                 _contacts.value = list
-            } catch (e: Exception) {
+            } catch (_: Exception) {
                 _contacts.value = emptyList()
             }
         }

@@ -15,8 +15,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import com.example.androidtest.view.utilitaire.isTablet
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.foundation.background
-import androidx.compose.ui.graphics.Color
+
 
 @Composable
 fun Cellules(contact: Contact, onClick: () -> Unit) {

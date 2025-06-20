@@ -14,7 +14,6 @@ import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Test
 import com.example.androidtest.viewmodel.ContactViewModel
-import org.mockito.kotlin.*
 import com.example.androidtest.model.Contact
 import com.example.androidtest.network.ContactApiService
 import kotlinx.coroutines.flow.first
@@ -46,8 +45,8 @@ class DetailsViewModelTest {
     }
 
     @Test
-    fun `loadContactById should update contact on success`() = runTest {
-        val fakeContact = ApiContact(
+    fun `loadContactById devrait mettre a jour le contact en cas de succes`() = runTest {
+        val fauxContact = ApiContact(
             id = 1,
             name = "John Doe",
             email = "john@example.com",
@@ -58,7 +57,7 @@ class DetailsViewModelTest {
                 zipcode = "12345"
             )
         )
-        coEvery { repository.getContactById(1) } returns fakeContact
+        coEvery { repository.getContactById(1) } returns fauxContact
 
         viewModel.loadContactById(1)
         testDispatcher.scheduler.advanceUntilIdle()
@@ -70,7 +69,7 @@ class DetailsViewModelTest {
     }
 
     @Test
-    fun `loadContactById should set contact to null on error`() = runTest {
+    fun `loadContactById devrait mettre le contact a null en cas d'erreur`() = runTest {
         coEvery { repository.getContactById(any()) } throws Exception("Network error")
 
         viewModel.loadContactById(1)
@@ -91,7 +90,7 @@ class ContactViewModelTest {
     @Before
     fun setup() {
         Dispatchers.setMain(testDispatcher)
-        repository = mock()
+        repository = mockk()
     }
 
     @After
@@ -100,12 +99,12 @@ class ContactViewModelTest {
     }
 
     @Test
-    fun `loadContacts should update contacts on success`() = runTest {
+    fun `loadContacts devrait mettre a jour la liste des contacts en cas de succes`() = runTest {
         val fakeContacts = listOf(
             Contact(1, "John Doe", "123 Main St"),
             Contact(2, "Jane Smith", "456 Maple Ave")
         )
-        whenever(repository.getContactList()).thenReturn(fakeContacts)
+        coEvery { repository.getContactList() } returns fakeContacts
 
         viewModel = ContactViewModel(repository)
 
@@ -116,8 +115,8 @@ class ContactViewModelTest {
     }
 
     @Test
-    fun `loadContacts should update contacts with empty list on failure`() = runTest {
-        whenever(repository.getContactList()).thenThrow(RuntimeException("Erreur réseau"))
+    fun `loadContacts met a jour avec une liste vide quand ca echoue`() = runTest {
+        coEvery { repository.getContactList() } throws RuntimeException("Erreur réseau")
 
         viewModel = ContactViewModel(repository)
 
@@ -193,7 +192,7 @@ class ContactApiServiceTest {
     }
 
     @Test
-    fun `getContactById returns single contact`() = runTest {
+    fun `getContactById renvoie un contact unique`() = runTest {
         val mockResponse = MockResponse()
             .setResponseCode(200)
             .setBody("""
@@ -219,11 +218,11 @@ class ContactApiServiceTest {
         assertEquals("Gwenborough", contact.address.city)
         assertEquals("Kulas Light", contact.address.street)
     }
-    @Test
-    fun `getContacts should throw HttpException on 404 error`() = runTest {
+    @Test // pour voir ce qui se passe quand la ressource demande n'est pas sur le serveur
+    fun `getContacts doit lancer une HttpException en cas de erreur 404`() = runTest {
         val mockResponse = MockResponse()
             .setResponseCode(404)
-            .setBody("Not Found")
+            .setBody("Non Trouvé")
         mockWebServer.enqueue(mockResponse)
 
         try {
@@ -235,11 +234,11 @@ class ContactApiServiceTest {
         }
     }
 
-    @Test
-    fun `getContacts should throw HttpException on 500 error`() = runTest {
+    @Test // pour voir quand le serveur a un probleme et ne peut pas répondre correctement
+    fun `getContacts doit lancer une HttpException en cas de erreur 500`() = runTest {
         val mockResponse = MockResponse()
             .setResponseCode(500)
-            .setBody("Internal Server Error")
+            .setBody("Erreur Interne du Serveur")
         mockWebServer.enqueue(mockResponse)
 
         try {
