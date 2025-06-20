@@ -31,11 +31,11 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = "17"
     }
     buildFeatures {
         compose = true
@@ -52,6 +52,12 @@ android {
 
 dependencies {
 
+    testImplementation ("net.bytebuddy:byte-buddy:1.14.5")
+    testImplementation ("org.mockito:mockito-inline:4.+")
+    testImplementation ("org.mockito.kotlin:mockito-kotlin:4.1.0")
+    testImplementation ("io.mockk:mockk:1.13.5")
+    testImplementation ("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3")
+    testImplementation ("junit:junit:4.13.2")
     testImplementation ("com.squareup.okhttp3:mockwebserver:4.9.3")
     testImplementation ("junit:junit:4.13.2")
     implementation ("com.squareup.retrofit2:retrofit:2.9.0")

@@ -13,21 +13,37 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
+import com.example.androidtest.data.ContactRepository
+import com.example.androidtest.factory.ContactViewModelFactory
 import com.example.androidtest.view.composable.Cellules
+import com.example.androidtest.view.utilitaire.isTablet
 import com.example.androidtest.viewmodel.ContactViewModel
-import java.net.URLEncoder
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.foundation.background
+import androidx.compose.ui.graphics.Color
+
+
 
 @Composable
-fun ContactListScreen(navController: NavHostController, viewModel: ContactViewModel = viewModel()) {
+fun ContactListScreen(navController: NavHostController) {
+    val repository = ContactRepository()
+    val viewModel: ContactViewModel = viewModel(factory = ContactViewModelFactory(repository))
+    val tablet= isTablet()
     val contacts = viewModel.contacts.collectAsState().value
 
-    Column {
+    Column (
+        modifier = Modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colorScheme.background)
+            .padding(16.dp)
+    ){
         Text(
             text = "Liste de Contacts",
             modifier = Modifier.fillMaxWidth(),
-            fontSize = 28.sp,
+            fontSize = if (tablet) 48.sp else 28.sp,
             fontWeight = FontWeight.Bold,
-            textAlign = TextAlign.Center
+            textAlign = TextAlign.Center,
+            color = MaterialTheme.colorScheme.onBackground
         )
         Spacer(Modifier.height(30.dp))
         LazyColumn {
@@ -39,4 +55,5 @@ fun ContactListScreen(navController: NavHostController, viewModel: ContactViewMo
         }
     }
 }
+
 
